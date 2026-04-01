@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .header { background: #2c3e50; color: white; padding: 15px 20px; border-radius: 8px; }
+        .location { color: #7f8c8d; margin: 10px 0; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0;
+               border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        .btn-primary { background: #e74c3c; color: white; }
+        .btn-secondary { background: #3498db; color: white; }
+        .map-placeholder { background: #dfe6e9; height: 200px; border-radius: 8px;
+                           display: flex; align-items: center; justify-content: center;
+                           color: #636e72; margin: 15px 0; }
+        .update { background: white; padding: 10px 15px; border-radius: 6px;
+                  margin: 6px 0; border-left: 4px solid #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Bua le Eskom </h2>
+    </div>
+    <p class="location"> Mahikeng &nbsp;|&nbsp; 2 active faults in your area</p>
+    <a href="/report/"><button class="btn btn-primary"> Report a Fault</button></a>
+    <a href="/notifications/"><button class="btn btn-secondary"> View Notifications</button></a>
+    <div class="map-placeholder"> Community Fault Map — Mahikeng</div>
+    <h3>Recent Updates</h3>
+    <div class="update"> Fault #1023 — Resolved (Montshiwa Street)</div>
+    <div class="update"> Fault #1019 — In progress (Unit 7)</div>
+</body>
+</html>
