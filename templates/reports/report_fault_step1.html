@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Report Fault - Step 1{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <a class="btn btn-outline-primary mb-4" href="{% url 'home' %}">← Back to Home</a>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h2 class="mb-4 text-center">Report a Fault</h2>
+            <div class="progress mb-4" style="height: 8px;">
+                <div class="progress-bar" style="width: 33%; background: var(--primary-red);"></div>
+            </div>
+            <p class="progress text-center mb-4">Step 1 of 3 &nbsp; ● ● ●</p>
+            <p class="question text-center mb-5 fs-4 fw-bold">What type of fault are you experiencing?</p>
+            
+            <form method="post" action="{% url 'report_fault_step2' %}">
+                {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <button type="submit" name="fault_type" value="power_outage" class="option w-100">
+                            <span class="fs-1 d-block mb-2">⚡</span>
+                            Power Outage
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" name="fault_type" value="electrical_hazard" class="option w-100">
+                            <span class="fs-1 d-block mb-2">🔌</span>
+                            Electrical Hazard
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" name="fault_type" value="street_light" class="option w-100">
+                            <span class="fs-1 d-block mb-2">💡</span>
+                            Street Light Fault
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" name="fault_type" value="other" class="option w-100">
+                            <span class="fs-1 d-block mb-2">🔧</span>
+                            Other Electrical Issue
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

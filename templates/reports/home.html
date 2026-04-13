@@ -1,34 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-        .header { background: #2c3e50; color: white; padding: 15px 20px; border-radius: 8px; }
-        .location { color: #7f8c8d; margin: 10px 0; }
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0;
-               border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
-        .btn-primary { background: #e74c3c; color: white; }
-        .btn-secondary { background: #3498db; color: white; }
-        .map-placeholder { background: #dfe6e9; height: 200px; border-radius: 8px;
-                           display: flex; align-items: center; justify-content: center;
-                           color: #636e72; margin: 15px 0; }
-        .update { background: white; padding: 10px 15px; border-radius: 6px;
-                  margin: 6px 0; border-left: 4px solid #27ae60; }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h2>Bua le Eskom </h2>
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Location & Stats -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h5 class="text-muted mb-1">Your Location</h5>
+            <h3>{{ location | default:"Mahikeng" }} <span class="badge bg-danger fs-6">{{ fault_count }} active faults</span></h3>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end">
+            <button class="btn btn-outline-primary me-2" onclick="getLocation()">📍 Detect Location</button>
+        </div>
     </div>
-    <p class="location"> Mahikeng &nbsp;|&nbsp; 2 active faults in your area</p>
-    <a href="/report/"><button class="btn btn-primary"> Report a Fault</button></a>
-    <a href="/notifications/"><button class="btn btn-secondary"> View Notifications</button></a>
-    <div class="map-placeholder"> Community Fault Map — Mahikeng</div>
-    <h3>Recent Updates</h3>
-    <div class="update"> Fault #1023 — Resolved (Montshiwa Street)</div>
-    <div class="update"> Fault #1019 — In progress (Unit 7)</div>
-</body>
-</html>
+
+   <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="stats-card text-center">
+                <h4 class="text mb-1">{{ fault_count }}</h4>
+                <p class="text-muted mb-0">Active Faults</p>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="stats-card text-center">
+                <h4 class="text mb-1">15</h4>
+                <p class="text-muted mb-0">Resolved Today</p>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="stats-card text-center">
+                <h4 class="text mb-1">2.5h</h4>
+                <p class="text-muted mb-0">Avg Resolution</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mb-5">
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'report_fault' %}" class="btn btn-report text-white w-100">
+                🚨 Report a Fault
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'track_fault' %}" class="btn btn-track text-white w-100">
+                🔍 Track a Fault
+            </a>
+        </div>
+        <div class="col-md-6 mb-3">
+            <a href="{% url 'notifications' %}" class="btn btn-notif text-white w-100">
+                🔔 View Notifications
+            </a>
+        </div>
+    </div>
+
+    <!-- Interactive Map -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4>Community Fault Map</h4>
+            <div id="map" class="map-container"></div>
+        </div>
+    </div>
+
+    <!-- Recent Updates -->
+    <div class="row">
+        <div class="col-12">
+            <h4>Recent Updates</h4>
+            {% for update in recent_updates %}
+            <div class="update-item">
+                <strong>Fault #{{ update.id }}</strong> — {{ update.status }} ({{ update.area }})
+            </div>
+            {% empty %}
+            <p class="text-muted">No recent updates.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Initialize Map
+    const map = L.map('map').setView([-25.865, 25.84], 13);  // Mahikeng coords
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Sample fault markers
+    const faults = [
+        { coords: [-25.865, 25.84], popup: 'Fault #1023: Resolved - Montshiwa St' },
+        { coords: [-25.870, 25.845], popup: 'Fault #1019: In Progress - Unit 7' }
+    ];
+    faults.forEach(f => {
+        L.marker(f.coords).addTo(map)
+            .bindPopup(f.popup)
+            .openPopup();
+    });
+
+    // Geolocation
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                map.setView([pos.coords.latitude, pos.coords.longitude], 13);
+                L.marker([pos.coords.latitude, pos.coords.longitude]).addTo(map)
+                    .bindPopup('Your location').openPopup();
+            });
+        }
+    }
+
+
+</script>
+{% endblock %}

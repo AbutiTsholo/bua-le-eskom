@@ -1,33 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report a fault</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-        .header { background: #2c3e50; color: white; padding: 15px 20px; border-radius: 8px; }
-        .progress { color: #7f8c8d; margin: 10px 0; }
-        .question { font-size: 18px; font-weight: bold; margin: 20px 0 10px; }
-        .option { display: block; width: 100%; padding: 15px; margin: 8px 0;
-                  background: white; border: 2px solid #dfe6e9; border-radius: 8px;
-                  font-size: 16px; cursor: pointer; text-align: left; }
-        .option:hover { border-color: #e74c3c; background: #fff5f5; }
-        .btn-next { display: block; width: 100%; padding: 15px; margin-top: 20px;
-                    background: #e74c3c; color: white; border: none;
-                    border-radius: 8px; font-size: 16px; cursor: pointer; }
-        .back { color: #3498db; text-decoration: none; display: block; margin-bottom: 10px; }
-    </style>
-</head>
-<body>
-    <div class="header"><h2>Report a Fault</h2></div>
-    <a class="back" href="/">← Back to Home</a>
-    <p class="progress">Step 1 of 3 &nbsp; ● ○ ○</p>
-    <p class="question">What type of fault are you experiencing?</p>
-    <button class="option">⚡ Power outage</button>
-    <button class="option">🔌 Electrical hazard</button>
-    <button class="option">💡 Street light fault</button>
-    <button class="option">🔧 Other electrical issue</button>
-    <button class="btn-next">NEXT →</button>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Report Fault{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <a class="back btn btn-outline-primary mb-4" href="{% url 'home' %}">← Back to Home</a>
+    <h2 class="mb-4">Report a Fault</h2>
+    <p class="progress mb-4">Step 1 of 3 &nbsp; ● ○ ○</p>
+    <p class="question mb-4">What type of fault are you experiencing?</p>
+<button class="option mb-2" onclick="selectFault('power_outage')">⚡ Power outage</button>
+    <button class="option mb-2" onclick="selectFault('electrical_hazard')">🔌 Electrical hazard</button>
+    <button class="option mb-2" onclick="selectFault('street_light')">💡 Street light fault</button>
+    <button class="option mb-2" onclick="selectFault('other')">🔧 Other electrical issue</button>
+    <button id="nextBtn" class="btn-next" disabled>NEXT →</button>
+</div>
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .back { color: #3498db; text-decoration: none; display: block; margin-bottom: 10px; }
+    .progress { color: #7f8c8d; margin: 10px 0; }
+    .question { font-size: 18px; font-weight: bold; margin: 20px 0 10px; }
+    .option { display: block; width: 100%; padding: 15px; margin: 8px 0;
+              background: white; border: 2px solid #dfe6e9; border-radius: 8px;
+              font-size: 16px; cursor: pointer; text-align: left; transition: all 0.2s; }
+    .option.selected { border-color: var(--primary-red); background: #fff5f5; box-shadow: 0 4px 12px rgba(231,76,60,0.3); }
+    .option:hover { border-color: var(--primary-red); background: #fff5f5; }
+    .btn-next { display: block; width: 100%; padding: 15px; margin-top: 20px;
+                background: var(--primary-red); color: white; border: none;
+                border-radius: 8px; font-size: 16px; cursor: pointer; }
+    .btn-next:disabled { background: #bdc3c7; cursor: not-allowed; }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    let selectedFault = null;
+    function selectFault(type) {
+        selectedFault = type;
+        document.querySelectorAll('.option').forEach(btn => btn.classList.remove('selected'));
+        event.target.classList.add('selected');
+        document.getElementById('nextBtn').disabled = false;
+    }
+    document.getElementById('nextBtn').onclick = function() {
+        if (selectedFault) {
+            alert(`Fault type "${selectedFault}" selected! Step 2 coming soon.`);
+        }
+    };
+</script>
+{% endblock %}

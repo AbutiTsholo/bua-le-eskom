@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bua le Eskom – Register</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f4f4;
+               min-height: 100vh; display: flex; align-items: center;
+               justify-content: center; padding: 20px; }
+        .card { background: white; border-radius: 12px; padding: 35px 30px;
+                width: 100%; max-width: 400px;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+        .logo { text-align: center; margin-bottom: 25px; }
+        .logo h1 { font-size: 24px; color: #2c3e50; }
+        .logo p { color: #7f8c8d; font-size: 13px; margin-top: 5px; }
+        label { display: block; font-size: 13px; color: #555;
+                margin-bottom: 6px; margin-top: 16px; }
+        input[type="text"], input[type="password"] {
+            width: 100%; padding: 12px; border: 2px solid #dfe6e9;
+            border-radius: 6px; font-size: 15px; }
+        input:focus { outline: none; border-color: #e74c3c; }
+        .help-text { font-size: 11px; color: #95a5a6; margin-top: 4px; }
+        .error-text { font-size: 11px; color: #e74c3c; margin-top: 4px; }
+        .btn { display: block; width: 100%; padding: 14px;
+               background: #e74c3c; color: white; border: none;
+               border-radius: 8px; font-size: 16px; cursor: pointer;
+               margin-top: 20px; }
+        .btn:hover { background: #c0392b; }
+        .login-link { text-align: center; margin-top: 18px;
+                      font-size: 14px; color: #7f8c8d; }
+        .login-link a { color: #e74c3c; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <h1>🔔 Bua le Eskom</h1>
+            <p>Create your community account</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="id_username">Username</label>
+            <input type="text" name="username" id="id_username" placeholder="Choose a username" required>
+            {% if form.username.errors %}
+                <div class="error-text">{{ form.username.errors|join:", " }}</div>
+            {% endif %}
+
+            <label for="id_password1">Password</label>
+            <input type="password" name="password1" id="id_password1" placeholder="Choose a password" required>
+            <div class="help-text">At least 8 characters</div>
+            {% if form.password1.errors %}
+                <div class="error-text">{{ form.password1.errors|join:", " }}</div>
+            {% endif %}
+
+            <label for="id_password2">Confirm Password</label>
+            <input type="password" name="password2" id="id_password2" placeholder="Repeat your password" required>
+            {% if form.password2.errors %}
+                <div class="error-text">{{ form.password2.errors|join:", " }}</div>
+            {% endif %}
+
+            <button class="btn" type="submit">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/login/">Log in here</a>
+        </div>
+    </div>
+</body>
+</html>
